@@ -47,7 +47,7 @@ conversor-moedas/
 Para alterar a taxa de câmbio, edite o arquivo `script.js` e modifique o valor da constante `exchangeRate`:
 
 ```javascript
-const exchangeRate = 6.30; // Substitua pelo valor desejado
+const exchangeRate = 6.30; // Substitua pelo valor desejado na conversão de 1 dolar para real
 ```
 
 ## Contribuição
