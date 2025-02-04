@@ -1,10 +1,48 @@
+import API_KEY from "./config.js";
+
+let exchangeRate = null;
+
+const apiRequest = async () => {
+    try {
+        const response = await fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`);
+        if (!response.ok) {
+            throw new Error(`${response.status} ${response.statusText}`);
+        }
+
+        const obj = await response.json();
+        exchangeRate = obj.conversion_rates.BRL;
+
+        document.getElementById("usd").disabled = false;
+        document.getElementById("brl").disabled = false;
+    } catch (error) {
+        showError(error.message);
+    }
+};
+
+function showError(message) {
+    const bodyContent = document.querySelector('main');
+    bodyContent.style.display = 'none';
+
+    const headerContent = document.querySelector('header');
+    headerContent.style.display = 'none';
+
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.style.display = 'block';
+
+    const errorText = document.getElementById('error-text');
+    errorText.innerText = message;
+}
+
+apiRequest();
+
 const usdInput = document.getElementById("usd");
 const brlInput = document.getElementById("brl");
 
+usdInput.disabled = true;
+brlInput.disabled = true;
+
 usdInput.addEventListener("input", handleUsdToBrl);
 brlInput.addEventListener("input", handleBrlToUsd);
-
-const exchangeRate = 6.30;
 
 let isConverting = false
 
@@ -31,6 +69,10 @@ function handleUsdToBrl() {
 
     sanitizeInput(usdInput);
 
+    if(usdInput.value == "") {
+        brlInput.value = "0.00"
+    };
+
     const usdValue = parseFloat(usdInput.value);
     if (!isNaN(usdValue)) {
         const brlValue = (usdValue * exchangeRate).toFixed(2);
@@ -45,6 +87,10 @@ function handleBrlToUsd() {
     isConverting = true;
 
     sanitizeInput(brlInput);
+
+    if(brlInput.value == "") {
+        usdInput.value = "0.00"
+    };
 
     const brlValue = parseFloat(brlInput.value);
     if (!isNaN(brlValue)) {
